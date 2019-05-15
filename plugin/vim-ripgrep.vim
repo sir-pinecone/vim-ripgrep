@@ -1,3 +1,9 @@
+//
+// Changes in this fork:
+// * removed case sensitive/insensitive args
+// * added g:rg_window_size to control the number of rows displayed in the search result window.
+//
+
 if exists('g:loaded_rg') || &cp
   finish
 endif
@@ -57,7 +63,13 @@ fun! s:RgSearch(txt)
   let l:rgopts = ' '
   silent! exe 'grep! ' . l:rgopts . a:txt
   if len(getqflist())
-    exe g:rg_window_location 'copen'
+    let l:size = ' '
+    if exists('g:rg_window_size') && (g:rg_window_size > 0)
+        let l:size = g:rg_window_size
+    else
+        let l:size = ' '
+    endif
+    exe g:rg_window_location 'copen '. l:size
     redraw!
     if exists('g:rg_highlight')
       call s:RgHighlight(a:txt)
